@@ -1,0 +1,53 @@
+{
+	"info": {
+		"_postman_id": "65a336ab-8b8a-4967-86e6-deacbd49b453",
+		"name": "API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "29139545"
+	},
+	"item": [
+		{
+			"name": "Metrics",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{URL}}/metrics",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"metrics"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Message",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"content\": \"Something\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{URL}}/message",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"message"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
