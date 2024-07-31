@@ -27,7 +27,6 @@ func SaveMessage(db *pgx.Conn, msg *models.Message) (id string, err error) {
 		context.Background(),
 		"INSERT INTO messages (content) VALUES ($1) RETURNING id",
 		msg.Content,
-		false,
 	).Scan(&id)
 	return
 }
