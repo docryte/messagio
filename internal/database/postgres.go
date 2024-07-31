@@ -41,7 +41,7 @@ func DeleteMessage(db *pgx.Conn, id string) (err error) {
 }
 
 func MarkMessageAsProcessed(db *pgx.Conn, id string) (err error) {
-	_, err = db.Exec(context.Background(), "UPDATE messages SET processed_at = NOW() WHERE id = $1", id)
+	_, err = db.Exec(context.Background(), "UPDATE messages SET processed_at = CURRENT_TIMESTAMP WHERE id = $1", id)
 	return
 }
 
