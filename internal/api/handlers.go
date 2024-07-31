@@ -16,23 +16,28 @@ import (
 func createMessageHandler(db *pgx.Conn, prod *kafka.Writer) (http.HandlerFunc) {
 	return func (w http.ResponseWriter, r *http.Request) {
 		var msg models.Message
+
 		err := json.NewDecoder(r.Body).Decode(&msg)
 		if err != nil {
 			http.Error(w, "Bad message", 400)
 			return
 		}
+
 		id, err := database.SaveMessage(db, &msg)
 		if err != nil {
 			log.Print(err.Error())
-			http.Error(w, "Error saving message. Try again later", 500)
+			http.Error(w, "Error saving message. Try again later", http.StatusInternalServerError)
 			return
 		}
+
 		err = broker.SendMessage(prod, &msg, id)
 		if err != nil {
 			log.Print(err.Error())
-			http.Error(w, "Error saving message. Try again later", 500)
+			http.Error(w, "Error saving message. Try again later", http.StatusBadRequest)
 			database.DeleteMessage(db, id)
 			return
 		}
+
+		w.WriteHeader(http.StatusCreated)
 	}
 }
