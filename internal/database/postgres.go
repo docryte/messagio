@@ -6,15 +6,12 @@ import (
 	"context"
 	"log"
 
-	"messagio/internal/config"
 	"messagio/internal/models"
 )
 
-var db *pgx.Conn
-
-func initPostgres(cfg *config.Config) {
+func GetConnection(addr string) (db *pgx.Conn) {
 	var err error
-	db, err = pgx.Connect(context.Background(), cfg.PostgresUrl)
+	db, err = pgx.Connect(context.Background(), addr)
 	if err != nil {
 		log.Fatal("Error connecting postgres database: ", err.Error())
 	}
@@ -22,9 +19,10 @@ func initPostgres(cfg *config.Config) {
 	if err != nil {
 		log.Fatal("Error resolving postgres database: ", err.Error())
 	}
+	return
 }
 
-func SaveMessage(msg *models.Message) (id int, err error) {
+func SaveMessage(db *pgx.Conn, msg *models.Message) (id string, err error) {
 	err = db.QueryRow(
 		context.Background(),
 		"INSERT INTO messages (content) VALUES ($1) RETURNING id",
@@ -34,7 +32,16 @@ func SaveMessage(msg *models.Message) (id int, err error) {
 	return
 }
 
-func MarkMessageAsProcessed(id int) (err error) {
+func DeleteMessage(db *pgx.Conn, id string) (err error) {
+	_, err = db.Exec(
+		context.Background(),
+		"DELETE FROM messages WHERE id = $1",
+		id,
+	)
+	return
+}
+
+func MarkMessageAsProcessed(db *pgx.Conn, id string) (err error) {
 	_, err = db.Exec(context.Background(), "UPDATE messages SET processed_at = NOW() WHERE id = $1", id)
 	return
 }
