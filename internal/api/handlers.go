@@ -49,6 +49,8 @@ func createStatsHandler(db *pgx.Conn) (http.HandlerFunc) {
 		stats, err := database.GetStats(db)
 		if err != nil {
 			http.Error(w, "Error getting statistics", http.StatusInternalServerError)
+			log.Print(err)
+			return
 		}
 		var response bytes.Buffer
 		json.NewEncoder(&response).Encode(stats)
