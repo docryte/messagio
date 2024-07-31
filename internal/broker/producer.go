@@ -7,10 +7,10 @@ import (
 	"github.com/segmentio/kafka-go"
 )
 
-func GetProducer(addr string, topic string) *kafka.Writer {
+func GetProducer(addr string) *kafka.Writer {
 	return &kafka.Writer{
 		Addr:		kafka.TCP(addr),
-		Topic:		topic,
+		Topic:		"messages",
 		Balancer:	&kafka.LeastBytes{},
 	}
 }

@@ -10,7 +10,6 @@ import (
 type Config struct {
 	PostgresUrl	string	`env:"POSTGRES_URL"`
 	KafkaUrl	string	`env:"KAFKA_URL"`
-	KafkaTopic	string	`env:"KAFKA_TOPIC"`
 }
 
 func Read() (cfg *Config) {

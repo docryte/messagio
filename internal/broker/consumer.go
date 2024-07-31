@@ -9,10 +9,10 @@ import (
 	"github.com/segmentio/kafka-go"
 )
 
-func RunConsumer(addr string, topic string, db *pgx.Conn) {
+func RunConsumer(addr string, db *pgx.Conn) {
 	reader := kafka.NewReader(kafka.ReaderConfig{
 		Brokers: 	[]string{addr},
-		Topic: 		topic,
+		Topic: 		"messages",
 		Partition: 	0,
 		MinBytes: 	10e3,
 		MaxBytes: 	10e6,
@@ -24,7 +24,7 @@ func RunConsumer(addr string, topic string, db *pgx.Conn) {
 		if err != nil {
 			log.Fatal("Failed to read message from Kafka: ", err.Error())
 		}
-		
+
 		id := string(m.Key)
 
 		err = database.MarkMessageAsProcessed(db, id)
