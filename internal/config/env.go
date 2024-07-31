@@ -12,9 +12,10 @@ type Config struct {
 	KafkaUrl	string	`env:"KAFKA_URL"`
 }
 
-func Read() (cfg *Config) {
+func Read() *Config {
+	cfg := &Config{}
 	if err := envconfig.Process(context.Background(), cfg); err != nil {
 		log.Fatal(err)
 	}
-	return
+	return cfg
 }
