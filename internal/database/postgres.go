@@ -54,11 +54,11 @@ func GetStats(db *pgx.Conn) (stats models.Statistics, err error) {
 				COUNT (*) AS total_processed_messages,
 				MAX(processed_at) AS last_processed_message_time,
 				AVG(EXTRACT(EPOCH FROM (processed_at - created_at)) * 1000) AS average_processing_time_ms,
-				(SELECT COUNT(*) FROM messages WHERE processed = false) AS queued_messages
+				(SELECT COUNT(*) FROM messages WHERE processed_at = null) AS queued_messages
 			FROM
 				messages
 			WHERE
-				processed = true
+				processed_at != null
 		`,
 	).Scan(
 		&stats.TotalProccessedMessages,
