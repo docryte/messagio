@@ -1,6 +1,7 @@
 package api
 
 import (
+	"bytes"
 	"encoding/json"
 	"log"
 	"net/http"
@@ -39,5 +40,18 @@ func createMessageHandler(db *pgx.Conn, prod *kafka.Writer) (http.HandlerFunc) {
 		}
 
 		w.WriteHeader(http.StatusCreated)
+	}
+}
+
+
+func createStatsHandler(db *pgx.Conn) (http.HandlerFunc) {
+	return func (w http.ResponseWriter, r *http.Request) {
+		stats, err := database.GetStats(db)
+		if err != nil {
+			http.Error(w, "Error getting statistics", http.StatusInternalServerError)
+		}
+		var response bytes.Buffer
+		json.NewEncoder(&response).Encode(stats)
+		w.Write(response.Bytes())
 	}
 }

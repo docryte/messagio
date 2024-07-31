@@ -15,7 +15,9 @@ func Run(db *pgx.Conn, prod *kafka.Writer) {
 	r := chi.NewRouter()
 
 	r.Use(middleware.Logger)
+	
 	r.Post("/message", createMessageHandler(db, prod))
+	r.Get("/metrics", createStatsHandler(db))
 
 	log.Fatal(http.ListenAndServe(":8080", r))
 }
