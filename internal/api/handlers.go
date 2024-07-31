@@ -54,6 +54,8 @@ func createStatsHandler(db *pgx.Conn) (http.HandlerFunc) {
 		}
 		var response bytes.Buffer
 		json.NewEncoder(&response).Encode(stats)
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusOK)
 		w.Write(response.Bytes())
 	}
 }
